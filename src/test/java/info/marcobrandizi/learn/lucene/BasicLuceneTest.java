@@ -7,6 +7,7 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field.Store;
+import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
@@ -51,6 +52,11 @@ public class BasicLuceneTest
 		addDoc ( w, "Another Test", "doc2" );
 		addDoc ( w, "Yet Another test", "doc3" );	
 		addDoc ( w, "My Personal Doc", "doc4" );	
+		// Obviously this is another doc, having the same ID (see last search below)
+		addDoc ( w, "Alternative Title", "doc4" );	
+
+		addDoc ( w, "Exact Search Sample 1", "doc10" );	
+		addDoc ( w, "Exact Search Sample 2", "doc10 0" );	
 		
 		w.close ();
 		
@@ -73,6 +79,17 @@ public class BasicLuceneTest
 		scoreDocs = searchAllFields ( searcher, analyzer, "title:\"just a test\" OR docId:\"DOC2\"" );
 		logResults ( searcher, scoreDocs );
 		Assert.assertEquals ( "Wrong no. of results", 2, scoreDocs.length );
+
+		log.info ( "Exact Search" );
+		scoreDocs = searchAllFields ( searcher, analyzer, "docId:'doc10'" );
+		logResults ( searcher, scoreDocs );
+		Assert.assertEquals ( "Wrong no. of results", 1, scoreDocs.length );
+		
+		log.info ( "Search same doc with multiple titles" );
+		scoreDocs = searchAllFields ( searcher, analyzer, "docId:\"doc4\"" );
+		logResults ( searcher, scoreDocs );
+		// Two Lucene docs, pointing to the same ID.
+		Assert.assertEquals ( "Wrong no. of results", 2, scoreDocs.length );
 	}
 	
 
@@ -81,14 +98,15 @@ public class BasicLuceneTest
 		Document doc = new Document ();
 		doc.add ( new TextField ( "title", keyword, Store.YES ) );
 		doc.add ( new StringField ( "docId", id, Store.YES ) );
+		doc.add ( new StoredField ( "note", "An example of non-indexed field" ) );
 		w.addDocument ( doc );
 	}
 	
 	
-	private ScoreDoc[] search ( IndexSearcher searcher, Supplier<QueryParser> queryParserSupplier, String queryStr ) 
+	private ScoreDoc[] search ( IndexSearcher searcher, QueryParser queryParser, String queryStr ) 
 		throws ParseException, IOException
 	{
-		Query q = queryParserSupplier.get ().parse ( queryStr );
+		Query q = queryParser.parse ( queryStr );
 		TopDocs topDocs = searcher.search ( q, 10 );
 		return topDocs.scoreDocs;
 	}
@@ -96,13 +114,13 @@ public class BasicLuceneTest
 	private ScoreDoc[] searchByTitle ( IndexSearcher searcher, final Analyzer analyzer, String queryStr ) 
 		throws ParseException, IOException
 	{
-		return search ( searcher, () -> new QueryParser ( "title", analyzer ), queryStr );
+		return search ( searcher, new QueryParser ( "title", analyzer ), queryStr );
 	}
 	
 	private ScoreDoc[] searchAllFields ( IndexSearcher searcher, Analyzer analyzer, String queryStr ) 
 		throws ParseException, IOException
 	{
-		return search ( searcher, () -> new MultiFieldQueryParser ( new String [] { "title", "docId" }, analyzer ), queryStr );
+		return search ( searcher, new MultiFieldQueryParser ( new String [] { "title", "docId" }, analyzer ), queryStr );
 	}
 	
 	
