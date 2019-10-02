@@ -1,7 +1,6 @@
 package info.marcobrandizi.learn.lucene;
 
 import java.io.IOException;
-import java.util.function.Supplier;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -46,20 +45,18 @@ public class BasicLuceneTest
 		Directory index = new RAMDirectory ();
 		StandardAnalyzer analyzer = new StandardAnalyzer ();
 		IndexWriterConfig cfg = new IndexWriterConfig ( analyzer );
-		IndexWriter w = new IndexWriter ( index, cfg );
-
-		addDoc ( w, "Just a Test", "doc1" );
-		addDoc ( w, "Another Test", "doc2" );
-		addDoc ( w, "Yet Another test", "doc3" );	
-		addDoc ( w, "My Personal Doc", "doc4" );	
-		// Obviously this is another doc, having the same ID (see last search below)
-		addDoc ( w, "Alternative Title", "doc4" );	
-
-		addDoc ( w, "Exact Search Sample 1", "doc10" );	
-		addDoc ( w, "Exact Search Sample 2", "doc10 0" );	
-		
-		w.close ();
-		
+		try ( IndexWriter w = new IndexWriter ( index, cfg ) )
+		{
+			addDoc ( w, "Just a Test", "doc1" );
+			addDoc ( w, "Another Test", "doc2" );
+			addDoc ( w, "Yet Another test", "doc3" );	
+			addDoc ( w, "My Personal Doc", "doc4" );	
+			// Obviously this is another doc, having the same ID (see last search below)
+			addDoc ( w, "Alternative Title", "doc4" );	
+	
+			addDoc ( w, "Exact Search Sample 1", "doc10" );	
+			addDoc ( w, "Exact Search Sample 2", "doc10 0" );	
+		}
 		
 		// Search
 		IndexReader idxRdr = DirectoryReader.open ( index );
