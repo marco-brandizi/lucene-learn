@@ -50,7 +50,7 @@ public class BasicLuceneTest
 	@BeforeClass
 	public static void createIndex () throws Exception
 	{
-		Directory index = new RAMDirectory ();
+		index = new RAMDirectory ();
 		IndexWriterConfig cfg = new IndexWriterConfig ( analyzer );
 		try ( IndexWriter w = new IndexWriter ( index, cfg ) )
 		{
