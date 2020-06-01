@@ -114,6 +114,7 @@ public class BasicLuceneTest
 		log.info ( "Search same doc with multiple titles" );
 		ScoreDoc[] scoreDocs = searchAllFields ( "docId:\"doc4\"" );
 		logResults ( scoreDocs );
+		
 		// Two Lucene docs, pointing to the same ID.
 		Assert.assertEquals ( "Wrong no. of results", 2, scoreDocs.length );
 	}
