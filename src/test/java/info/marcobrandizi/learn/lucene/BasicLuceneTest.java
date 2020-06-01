@@ -139,7 +139,7 @@ public class BasicLuceneTest
 		log.info ( "Search mixed case ID, KeywordAnalyzer" );
 		Analyzer kwAnalyzer = new KeywordAnalyzer ();
 		ScoreDoc[] scoreDocs = searchAllFields ( searcher, kwAnalyzer, "CamelDoc01" );
-		logResults ( searcher, scoreDocs );
+		logResults ( scoreDocs );
 		Assert.assertEquals ( "This should match", 1, scoreDocs.length );
 	}
 	
