@@ -83,7 +83,7 @@ public class BasicLuceneTest
 	}
 	
 	/**
-	 * @see https://stackoverflow.com/questions/62119328
+	 * @see <a href = "https://stackoverflow.com/questions/62119328">here</a>.
 	 */
 	@Test
 	public void testIdMixedCaseID () throws Exception
