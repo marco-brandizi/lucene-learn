@@ -11,8 +11,6 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.RAMDirectory;
 import org.junit.ClassRule;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TODO: comment me!
