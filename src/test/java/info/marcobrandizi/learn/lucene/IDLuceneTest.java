@@ -52,6 +52,9 @@ public class IDLuceneTest
 			lh.addDoc ( w, "DUP Doc 2", "DUP1" );
 			lh.addDoc ( w, "DUP Doc 2", "DUP2" );
 			lh.addDoc ( w, "DUP Doc 3", "DUP2" );
+			
+			lh.addDoc ( w, "Token ID Doc 1", "TOKEN ID 1" );
+			lh.addDoc ( w, "Token ID Doc 2", "ID 1" );
 		}
 	});
 	
@@ -127,4 +130,15 @@ public class IDLuceneTest
 		ScoreDoc[] scoreDocs = idxmgr.logResults ( idxmgr.search ( qb.build () ) );
 		assertEquals ( "Wrong no of results (disjunction + parser + term queries)", 0, scoreDocs.length );
 	}
+	
+	@Test
+	public void testTokenIDs () throws Exception
+	{
+		ScoreDoc[] scoreDocs = idxmgr.logResults ( idxmgr.searchByID ( "TOKEN ID 1" ) );
+		assertEquals ( "Wrong no of results for TOKEN ID 1", 1, scoreDocs.length );
+		
+		scoreDocs = idxmgr.logResults ( idxmgr.searchByID ( "ID 1" ) );
+		assertEquals ( "Wrong no of results ID 1", 1, scoreDocs.length );
+	}
+
 }

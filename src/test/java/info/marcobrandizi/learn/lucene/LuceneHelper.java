@@ -15,6 +15,7 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
@@ -82,6 +83,13 @@ public class LuceneHelper extends ExternalResource
 	public ScoreDoc[] searchByTitle ( String queryStr ) throws ParseException, IOException
 	{
 		return search ( new QueryParser ( "title", analyzer ), queryStr );
+	}
+
+	public ScoreDoc[] searchByID ( String id ) throws ParseException, IOException
+	{
+		QueryParser qp = new QueryParser ( "foo", analyzer );
+		Query pq = qp.createPhraseQuery ( "docId", id );
+		return search ( pq );
 	}
 		
 	public ScoreDoc[] searchAllFields ( String queryStr ) throws ParseException, IOException
