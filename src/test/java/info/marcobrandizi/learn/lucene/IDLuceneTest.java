@@ -37,7 +37,7 @@ public class IDLuceneTest
 	public static LuceneHelper idxmgr = LuceneHelper.of ( lh -> 
 	{
 		// No pun intended!!!
-		Map<String,Analyzer> anals = new HashMap<> ();
+		Map<String, Analyzer> anals = new HashMap<> ();
 		anals.put ( "docId", new KeywordAnalyzer () );
 		lh.analyzer = new PerFieldAnalyzerWrapper ( new StandardAnalyzer (), anals );
 
@@ -55,6 +55,12 @@ public class IDLuceneTest
 			
 			lh.addDoc ( w, "Token ID Doc 1", "TOKEN ID 1" );
 			lh.addDoc ( w, "Token ID Doc 2", "ID 1" );
+
+			lh.addDoc ( w, "Accession Doc 1", "acc 1" );
+			lh.addDoc ( w, "Accession Doc 2", "acc 2" );
+			lh.addDoc ( w, "Accession Doc 3", "ACC 3" );
+			
+			lh.addDoc ( w,  "Multi-ID Doc", "MID1", "MID2", "MID3" );
 		}
 	});
 	
@@ -140,5 +146,28 @@ public class IDLuceneTest
 		scoreDocs = idxmgr.logResults ( idxmgr.searchByID ( "ID 1" ) );
 		assertEquals ( "Wrong no of results ID 1", 1, scoreDocs.length );
 	}
+	
+	@Test
+	public void testQuerySyntax () throws Exception 
+	{
+		var qp = new QueryParser ( "docId", new KeywordAnalyzer () );
+		qp.setLowercaseExpandedTerms ( false );
+		
+		var scoreDocs = idxmgr.logResults ( idxmgr.search ( qp, "acc\\ *" ) );
+		assertEquals ( "Wrong no of results for query parser with ID string", 2, scoreDocs.length );
 
+		scoreDocs = idxmgr.logResults ( idxmgr.search ( qp, "ACC\\ *" ) );
+		assertEquals ( "Wrong no of results for query parser with ID string", 1, scoreDocs.length );
+	}
+
+	@Test
+	public void testMultivalueField () throws Exception
+	{
+		var qp = new QueryParser ( "docId", new KeywordAnalyzer () );
+		qp.setLowercaseExpandedTerms ( false );
+		
+		var scoreDocs = idxmgr.logResults ( idxmgr.search ( qp, "MID1 OR MID2" ) );
+		assertEquals ( "Wrong no of results for query parser with ID string", 1, scoreDocs.length );
+	}
+	
 }

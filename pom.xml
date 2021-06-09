@@ -31,7 +31,7 @@
 		<dependency>
 		  <groupId>uk.ac.ebi</groupId>
 		  <artifactId>jutils</artifactId>
-	  	<version>6.0.1-SNAPSHOT</version>
+	  	<version>10.0-SNAPSHOT</version>
 		</dependency>
 		
 		<dependency>
@@ -56,8 +56,8 @@
       <plugin>
 	      <artifactId>maven-compiler-plugin</artifactId>
 	      <configuration>
-	        <source>1.8</source>
-	        <target>1.8</target>
+	        <source>11</source>
+	        <target>11</target>
 	        <encoding>utf-8</encoding>
 	      </configuration>
 	    </plugin>
@@ -83,8 +83,8 @@
 
 		<!-- jutils -->
 		<repository>
-	    <id>EBIBioSamples-GH-repo</id>
-	    <url>https://raw.githubusercontent.com/EBIBioSamples/EBIBioSamples.github.io/maven-repo</url>
+    	<id>mbrandizi.jfrog.io</id>
+			<url>https://mbrandizi.jfrog.io/artifactory/maven</url>
 	    <snapshots>
         <enabled>true</enabled>
 	    </snapshots>

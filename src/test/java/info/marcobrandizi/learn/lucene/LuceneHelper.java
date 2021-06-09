@@ -59,14 +59,16 @@ public class LuceneHelper extends ExternalResource
 		};
 	}
 	
-	public void addDoc ( IndexWriter w, String keyword, String id ) throws IOException
+	public void addDoc ( IndexWriter w, String keyword, String... ids ) throws IOException
 	{
 		Document doc = new Document ();
 		doc.add ( new TextField ( "title", keyword, Store.YES ) );
-		doc.add ( new StringField ( "docId", id, Store.YES ) );
+		for ( String id: ids )
+			doc.add ( new StringField ( "docId", id, Store.YES ) );
 		//doc.add ( new StoredField ( "note", "An example of non-indexed field" ) );
 		w.addDocument ( doc );
 	}
+	
 
 	public ScoreDoc[] search ( QueryParser queryParser, String queryStr ) throws ParseException, IOException
 	{
